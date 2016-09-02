@@ -128,6 +128,8 @@ def processdata(received):
         if n!=len(latest):
             proclog.write(",")
         else:
+            proclog.write(",")
+            proclog.write(time.time())
             proclog.write("\n")
     proclog.close()
     printData(received)
