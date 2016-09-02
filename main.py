@@ -51,10 +51,16 @@ def printData():
     print("RSSI:{0}, SNR:{1}".format(latest[1],latest[2]))
     print("Altitude: {0} m".format(latest[7]))
     print("P: {0} hPa  |  T: {1} °C  |  Lat,long: {2}, {3}".format(latest[6],latest[8],latest[9],latest[10]))
-    print("Total counts: {0} | Thresholded counts: {1}".format(latest[7],latest[8]))
+    print("Photodiode counts: {0} | Average level: {1}".format(latest[11],latest[12]))
+    if latest[3] in EFM_boards:
+        print("EFM min: {0}  |  EFM max: {1}".format(latest[13],latest[14]))
+    if latest[3] in cloud_boards:
+        print("Cloud average: {0}/1024  |  SD: {1}".format(latest[15],latest[16]))
+    if latest[3] in hygro_boards:
+        print("Relative humidity: {0}%  |  Outside temp: {1} °C".format(latest[17],latest[18]))
     print("GPS {0}; has {1}got more than three satellites; hdop {2} less than 40m.".format("valid" if last_status[0]  else "invalid","" if last_status[1]  else "not ", "is" if last_status[2]  else "is not"))
     print("SD init {0}successful.".format("" if last_status[3]  else "un"))
-    print("============")
+    print("==========================")
     print("Waiting...")
 
 def processdata(received):
