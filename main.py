@@ -58,8 +58,8 @@ def printData():
         print("Cloud average: {0}/1024  |  SD: {1}".format(latest[15],latest[16]))
     if latest[3] in hygro_boards:
         print("Relative humidity: {0}%  |  Outside temp: {1} °C".format(latest[17],latest[18]))
-    print("GPS {0}; has {1}got more than three satellites; hdop {2} less than 40m.".format("valid" if last_status[0]  else "invalid","" if last_status[1]  else "not ", "is" if last_status[2]  else "is not"))
-    print("SD init {0}successful.".format("" if last_status[3]  else "un"))
+    print("GPS {0}; has {1}got more than or three satellites; hdop {2} less than 20m.".format("valid" if last_status[3]  else "invalid","" if last_status[2]  else "not ", "is" if last_status[1]  else "is not"))
+    print("SD init {0}successful. Promiscuous mode {0}".format("" if last_status[0]  else "un"), "on." if last_status[4] else "off.")
     print("==========================")
     print("Waiting...")
 
@@ -113,10 +113,11 @@ def processdata(received):
             latest[18] = 0
 
 
-        last_status[3] = True if (int(split[4],16)&0x1) == 1 else False #promiscuous mode
-        last_status[2] = True if (int(split[4],16)&0x2)>>1 == 1 else False #GPS valid
-        last_status[1] = True if (int(split[4],16)&0x4)>>2 == 1 else False #GPS has >3 satellites
-        last_status[0] = True if (int(split[4],16)&0x8)>>3 == 1 else False #SD init ok
+        last_status[4] = True if (int(split[4],16)&0x1) == 1 else False #promiscuous mode
+        last_status[3] = True if (int(split[4],16)&0x2)>>1 == 1 else False #GPS valid
+        last_status[2] = True if (int(split[4],16)&0x4)>>2 == 1 else False #GPS has >3 satellites
+        last_status[1] = True if (int(split[4],16)&0x8)>>3 == 1 else False
+        last_status[0] = True if (int(split[4],16)&0x10)>>4 == 1 else False #SD init ok
 
     except IndexError:
         print "Bad message."
@@ -143,8 +144,8 @@ QNH = input('Please input QNH in hPa')
 latest = [0,   0,    0,   0,  0,      0,    0.0,   0.0,      0,           0.0,  0.0, 0,        0,      0,   0,   0,          0,           0,  0]
          #CRC, RSSI, SNR, ID, status, batt, press, altitude, temperature, lat, long, pd_count, pd_avg, EFM, EFM, Cloud mean, cloud stdev, rh, ext temp
 
-last_status = [False,False,     False,      False]
-           #SD init, GPS >3sat, GPS valid, promiscuous mode
+last_status = [False,False,          False,     False,      False]
+           #SD init, GPS HDOP <=20m, GPS>=3sat, GPS valid, promiscuous mode
 
 pktcount = 0
 
