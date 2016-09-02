@@ -138,7 +138,7 @@ serial_port.baudrate = const_default_serial_baud
 if not open_serial_port(const_default_serial_port):
     print("bad serial port.")
     sys.exit(0)
-logfile_names = [nameLogFile("GND_RAW_"),nameLogFile("GND_PROCESSSED_0_"),nameLogFile("GND_PROCESSSED_1_"),nameLogFile("GND_PROCESSSED_2")]
+logfile_names = [nameLogFile("GND_RAW_"),nameLogFile("GND_PROCESSED_0_"),nameLogFile("GND_PROCESSED_1_"),nameLogFile("GND_PROCESSED_2")]
 #to clear serial console os.system('cls' if os.name == 'nt' else 'clear')
 QNH = input('Please input QNH in hPa')
 latest = [0,   0,    0,   0,  0,      0,    0.0,   0.0,      0,           0.0,  0.0, 0,        0,      0,   0,   0,          0,           0,  0]
