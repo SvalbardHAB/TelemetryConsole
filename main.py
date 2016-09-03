@@ -130,6 +130,7 @@ def processdata(received):
         else:
             proclog.write(",")
             proclog.write(time.time())
+            proclog.write(",#")
             proclog.write("\n")
     proclog.close()
     printData(received)
