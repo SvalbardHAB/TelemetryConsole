@@ -3,7 +3,7 @@ import serial,sys,time,os
 
 #const_default_serial_port = "/dev/tty.usbserial-A6009CSG"
 #const_default_serial_port = "/dev/tty.usbserial-A6009CSG"
-const_default_serial_port = "/dev/tty.usbserial-A6009B8C"
+const_default_serial_port = "/dev/cu.usbmodem1556311"
 const_default_serial_baud = 115200
 const_data_bad_time = 3.0
 const_serial_timeout = 0.01
@@ -59,7 +59,7 @@ def printData():
     if latest[3] in hygro_boards:
         print("Relative humidity: {0}%  |  Outside temp: {1} °C".format(latest[17],latest[18]))
     print("GPS {0}; has {1}got more than or three satellites; hdop {2} less than 20m.".format("valid" if last_status[3]  else "invalid","" if last_status[2]  else "not ", "is" if last_status[1]  else "is not"))
-    print("SD init {0}successful. Promiscuous mode {0}".format("" if last_status[0]  else "un"), "on." if last_status[4] else "off.")
+    print("SD init {0}successful. Promiscuous mode {1}".format("" if last_status[0]  else "un", "on." if last_status[4] else "off."))
     print("==========================")
     print("Waiting...")
 
@@ -87,8 +87,8 @@ def processdata(received):
 
         latest[8] = int(split[10],16)-128 #temperature in excess 128 format
 
-        latest[9] = ((int(split[11],16)<<24)|(int(split[12],16)<<16)|(int(split[13],16)<<8)|(int(split[14],16)))/1000000.0 #lat
-        latest[10] = ((int(split[15],16)<<24)|(int(split[16],16)<<16)|(int(split[17],16)<<8)|(int(split[18],16)))/1000000.0 #long
+        latest[9] = ((int(split[11],16)<<24)|(int(split[12],16)<<16)|(int(split[13],16)<<8)|(int(split[14],16)))/10000000.0 #lat
+        latest[10] = ((int(split[15],16)<<24)|(int(split[16],16)<<16)|(int(split[17],16)<<8)|(int(split[18],16)))/10000000.0 #long
         latest[10]*=const_lng_mult
 
         latest[11] = int(split[19],16)#photodiode count
@@ -133,7 +133,8 @@ def processdata(received):
             proclog.write(",#")
             proclog.write("\n")
     proclog.close()
-    printData(received)
+    printData()
+    print(received)
 
 
 serial_port = serial.Serial() #instantiate a new Serial port object
